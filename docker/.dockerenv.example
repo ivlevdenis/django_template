@@ -1,0 +1,9 @@
+DJANGO_SETTINGS_MODULE=apps.settings.dev
+; EMAIL_URL=
+; C_FORCE_ROOT=
+; SECRET_KEY=
+; CORS_ORIGIN_ALLOW_ALL=
+; SENTRY_DSN=
+; BROKER_URL=
+; CELERY_RESULT_BACKEND=
+; DATABASE_URL=postgres://django:django@db:5432/django
