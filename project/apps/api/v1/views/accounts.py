@@ -147,7 +147,6 @@ class UserViewSet(ExtendedModelViewSet):
         if serializer.is_valid(raise_exception=True):
             user = serializer.save()
             self._send_verify_email(request, user)
-            self._create_user_wallet(user)
             data = UserFullSerializer(instance=user).data
             return Response(data, status=status.HTTP_201_CREATED)
 
@@ -202,18 +201,6 @@ class UserViewSet(ExtendedModelViewSet):
 
     def _password_generator(self, size=8, chars=string.ascii_letters + string.digits):
         return ''.join(random.choice(chars) for i in range(size))
-
-    def _create_user_wallet(self, user):
-        password = self._password_generator(20)
-        user_payment_wallet = Web3Backend.create_row_wallet(password)
-        if user_payment_wallet:
-            user_wallet = UserWallet.objects.create(
-                address=user_payment_wallet.address,
-                password=password,
-                json=Web3Backend.create_json_dumps(user_payment_wallet.privateKey, password),
-                private_key=Web3Backend.get_to_hex(user_payment_wallet.privateKey),
-                owner=user,
-            )
 
     @swagger_auto_schema(responses={200: serializers.Serializer, 400: BadRequestResponseSerializer})
     @action(
