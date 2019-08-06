@@ -99,6 +99,6 @@ ENV/
 .ropeproject
 
 .env
-.dockerenv*
+.dockerenv
 .backup
 XDG_CACHE_HOME

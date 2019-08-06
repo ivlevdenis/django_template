@@ -3,7 +3,7 @@ from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from rest_framework import permissions, routers
 
-from apps.api.v1.views.accounts import OrganizationViewSet, UserViewSet
+from apps.api.v1.views.accounts import UserViewSet
 
 router = routers.DefaultRouter()
 router.register(r'accounts', UserViewSet, basename='accounts')

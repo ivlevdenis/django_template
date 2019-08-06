@@ -21,15 +21,11 @@ from rest_framework_jwt.serializers import (
 from rest_framework_jwt.settings import api_settings
 from rest_framework_jwt.views import refresh_jwt_token
 
-from apps.accounts.models import Organization
 from apps.api.v1.permissions import ObjectPermissions
 from apps.api.v1.serializers import BadRequestResponseSerializer, CommonErrorResponseSerializer
 from apps.api.v1.serializers.accounts import (
-    OrganizationSerializer,
-    OrganizationCreateSerializer,
     PasswordResetConfirmSerializer,
     PasswordResetSerializer,
-    UploadUserPhotoSerializer,
     UserChangePasswordSerializer,
     UserFullSerializer,
     UserLoginResponseSerializer,
@@ -37,9 +33,6 @@ from apps.api.v1.serializers.accounts import (
 )
 from apps.api.v1.tokens import EmailVerifyTokenGenerator, PasswordResetTokenGenerator
 from apps.api.v1.viewsets import ExtendedModelViewSet
-from apps.notifications.tasks import send_templated_email
-from apps.wallets.backends.ethereum import Web3Backend
-from apps.wallets.models import UserWallet
 
 User = get_user_model()
 jwt_response_payload_handler = api_settings.JWT_RESPONSE_PAYLOAD_HANDLER
@@ -73,7 +66,6 @@ class UserViewSet(ExtendedModelViewSet):
         'verify': VerifyJSONWebTokenSerializer,
         'registration': UserRegistrationSerializer,
         'change_password': UserChangePasswordSerializer,
-        'upload_photo': UploadUserPhotoSerializer,
         'password_reset': PasswordResetSerializer,
         'password_reset_confirm': PasswordResetConfirmSerializer,
     }
@@ -240,23 +232,6 @@ class UserViewSet(ExtendedModelViewSet):
             self._send_verify_email(request, user)
             return Response()
 
-    @swagger_auto_schema(responses={200: serializers.Serializer, 400: BadRequestResponseSerializer})
-    @action(methods=['patch'], detail=True, url_path='upload-photo')
-    def upload_photo(self, request, pk=None, **kwargs):
-        """
-        Upload photo in base64.
-        """
-        user = self.get_object()
-        serializer = self.get_serializer(data=request.data)
-        if serializer.is_valid(raise_exception=True):
-            photo = serializer.save()
-            if photo is None:
-                user.delete_photo()
-            else:
-                user.photo.save(photo.name, photo)
-                user.save()
-            return Response()
-
     @action(methods=['post'], detail=False)
     def password_reset(self, request):
         serializer = self.get_serializer(data=request.data)
@@ -270,16 +245,3 @@ class UserViewSet(ExtendedModelViewSet):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(status=status.HTTP_200_OK)
-
-
-class OrganizationViewSet(ExtendedModelViewSet):
-    queryset = Organization.objects.all()
-    serializer_class = OrganizationSerializer
-    serializer_class_map = {'create': OrganizationCreateSerializer, 'update': OrganizationCreateSerializer}
-    permission_classes = (ObjectPermissions,)
-    permission_map = {'list': permissions.IsAuthenticatedOrReadOnly, 'retrieve': permissions.IsAuthenticatedOrReadOnly}
-
-    def filter_queryset(self, queryset):
-        if self.action == 'list' or self.action == 'retrieve':
-            self.filter_backends = (DjangoFilterBackend, SearchFilter, OrderingFilter)
-        return super().filter_queryset(queryset)
