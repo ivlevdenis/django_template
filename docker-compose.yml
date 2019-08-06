@@ -1,0 +1,55 @@
+version: "3"
+services:
+  db:
+    image: postgres:11-alpine
+    container_name: {{ project_name }}_api_db
+    restart: always
+    volumes:
+      - ./db/data:/var/lib/postgresql/data
+      - ./db/backup:/backup
+      - ./docker/db/init-user.sql:/docker-entrypoint-initdb.d/init-user.sql
+
+  redis:
+    image: redis:5.0-alpine
+    container_name: {{ project_name }}_api_redis
+    restart: always
+    volumes:
+      - ./redis/data:/data
+
+  app:
+      build:
+        context: .
+        dockerfile: docker/Dockerfile
+      image: {{ project_name }}_api_app    
+      container_name: {{ project_name }}_api_app
+      env_file: docker/.dockerenv
+      restart: always
+      volumes:
+        - ./project:/app
+      links:
+        - db
+        - redis
+      depends_on:
+        - db
+        - redis
+      ports:
+        - "8000:8000"
+      command: ["make", "app"]
+
+  celery:
+      build:
+        context: .
+        dockerfile: docker/Dockerfile
+      image: {{ project_name }}_api_app
+      env_file: docker/.dockerenv
+      restart: always
+      volumes:
+        - ./project:/app
+        - ./media_root:/media_root
+      links:
+        - db
+        - redis
+      depends_on:
+        - db
+        - redis
+      command: ["make", "celery"]

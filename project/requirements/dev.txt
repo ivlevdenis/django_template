@@ -1,0 +1,6 @@
+-r common.txt
+
+django-debug-toolbar
+flake8
+pytest
+pytest-django
