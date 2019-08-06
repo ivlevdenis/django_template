@@ -169,7 +169,7 @@ class UserViewSet(ExtendedModelViewSet):
     @action(methods=['post'], detail=False, url_path='change-password')
     def change_password(self, request):
         """
-        Retrieve auth token by pair of email & password or phone & password.
+        Change password.
         """
         serializer = self.get_serializer(data=request.data, instance=request.user)
         if serializer.is_valid(raise_exception=True):
@@ -223,13 +223,13 @@ class UserViewSet(ExtendedModelViewSet):
     @action(methods=['post'], detail=False)
     def password_reset(self, request):
         serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(status=status.HTTP_200_OK)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            return Response(status=status.HTTP_200_OK)
 
     @action(methods=['post'], detail=False)
     def password_reset_confirm(self, request):
         serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(status=status.HTTP_200_OK)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            return Response(status=status.HTTP_200_OK)
