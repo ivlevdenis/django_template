@@ -33,6 +33,7 @@ from apps.api.v1.serializers.accounts import (
 )
 from apps.api.v1.tokens import EmailVerifyTokenGenerator, PasswordResetTokenGenerator
 from apps.api.v1.viewsets import ExtendedModelViewSet
+from apps.notifications.tasks import send_templated_email
 
 User = get_user_model()
 jwt_response_payload_handler = api_settings.JWT_RESPONSE_PAYLOAD_HANDLER
