@@ -16,6 +16,7 @@ INSTALLED_APPS = [
     'constance.backends.database',
 
     'apps.accounts',
+    'apps.web',
 
     'django.contrib.admin',
 ]
