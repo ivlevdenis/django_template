@@ -7,7 +7,6 @@ SECRET_KEY = 'not-a-valid-secret-key'
 
 INSTALLED_APPS += (
     'debug_toolbar',
-    'rosetta',
 )
 
 MIDDLEWARE.insert(0, 'debug_toolbar.middleware.DebugToolbarMiddleware')
