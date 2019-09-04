@@ -12,3 +12,8 @@ $ python3.7 -m venv venv
 $ source venv/bin/activate
 $ pip install -r project/requrements.txt
 ```
+
+## Run
+Copy `./docker/.dockerenv.example` to `./docker/.dockerenv` and configure him.
+
+Run command `make app`
