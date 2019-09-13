@@ -12,7 +12,6 @@ from rest_framework import permissions, serializers, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework.response import Response
-from rest_framework.settings import api_settings
 from rest_framework_jwt.serializers import (
     JSONWebTokenSerializer,
     RefreshJSONWebTokenSerializer,

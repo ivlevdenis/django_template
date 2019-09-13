@@ -6,7 +6,6 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.password_validation import validate_password
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
-from django.core.validators import validate_email
 from django.conf import settings
 from django.template import loader
 from django.utils import timezone
@@ -104,7 +103,7 @@ class PasswordResetSerializer(serializers.Serializer):
 
     def validate_email(self, value):
         if not User.objects.filter(email=value).exists():
-            raise exceptions.ValidateError(_(f'User with email {email} not found.'))
+            raise exceptions.ValidateError(_(f'User with email {value} not found.'))
         return value
 
     def save(self):
@@ -129,7 +128,7 @@ class PasswordResetConfirmSerializer(serializers.Serializer):
         try:
             uid = force_text(urlsafe_base64_decode(attrs['uid']))
             self.user = User.objects.get(pk=uid)
-        except:
+        except (ValueError, User.DoesNotExist):
             raise ValidationError({'uid': ['Invalid value']})
         if attrs['password1'] != attrs['password2']:
             raise ValidationError({'password2': ['Passwords do not match']})

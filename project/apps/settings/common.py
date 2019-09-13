@@ -40,7 +40,7 @@ from .inc_other.constance import *  # noqa
 from .inc_other.cors import *  # noqa
 from .inc_other.debug_toolbar import *  # noqa
 from .inc_other.drf import *  # noqa
-from .inc_other.jwt import *  # noga
+from .inc_other.jwt import *  # noqa
 from .inc_other.sentry_config import *  # noqa
 from .inc_other.swagger import *  # noqa
 from .inc_other.watchman import *  # noqa
