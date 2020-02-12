@@ -2,7 +2,7 @@ celery[redis]==4.3.0
 kombu==4.6.3
 amqp==2.5.0
 billiard==3.6.0.0
-Django==2.2.8
+Django==2.2.10
 django-constance[database]==2.4.0
 django-cors-headers==3.0.2
 django-environ==0.4.5
