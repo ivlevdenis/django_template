@@ -13,7 +13,7 @@ django-phonenumber-field==3.0.1
 django-redis==4.10.0
 django-watchman==0.17.0
 drf-yasg==1.16.1
-djangorestframework==3.10.2
+djangorestframework==3.11.2
 djangorestframework-guardian==0.3.0
 djangorestframework-recaptcha==0.2.0
 djangorestframework-jwt==1.11.0
